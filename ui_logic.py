@@ -30,10 +30,10 @@ osbot_script = get_osbot_settings()[3]
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self, *args, obj=None, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+    def __init__(self):
+        super(MainWindow, self).__init__()
         self.setupUi(self)
-        QTimer.singleShot(1,self.load_settings) # Initialize settings after ui setup
+        QTimer.singleShot(1, self.load_settings) # Initialize settings after ui setup
 
 
     def load_settings(self):
@@ -71,8 +71,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def save_settings(self):
         pass
 
-
-
     def save_console(self):
         """Saves the entire contents of the console to the log.txt file"""
         log = self.console_browser.toPlainText()
@@ -84,8 +82,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.console_browser.clear()
 
     def create_accounts(self):
-        acc_creator.create_account(self)
-
+        acc_creator.create_account(self.console_browser)
 
 
 app = QtWidgets.QApplication(sys.argv)

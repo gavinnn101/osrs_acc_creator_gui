@@ -150,52 +150,52 @@ def save_account(payload, proxy=None):
     return formatted_payload
 
 
-def create_account(self):
+def create_account(console_browser):
     """Creates our account and returns the registration info"""
     accs_created = 0 #initialize
     failure_counter = 0 #initialize
     failure_threshold = 3 # If we fail this many times, the script will stop.
     sleep_timer = 5 # This is how long we will sleep between account creations.
 
-    self.console_browser.append(f"We'll make: {NUM_OF_ACCS} accounts.")
-    self.console_browser.append(f"Will we use proxies?: {USE_PROXIES}")
-    self.console_browser.append(f"Will we use Tribot CLI?: {TRIBOT_ACTIVE}")
-    self.console_browser.append(f"Will we use OSBot CLI?: {OSBOT_ACTIVE}")
-    self.console_browser.append("\nNeed Support? Join the discord - https://discord.gg/SjVjQvm")
+    console_browser.append(f"We'll make: {NUM_OF_ACCS} accounts.")
+    console_browser.append(f"Will we use proxies?: {USE_PROXIES}")
+    console_browser.append(f"Will we use Tribot CLI?: {TRIBOT_ACTIVE}")
+    console_browser.append(f"Will we use OSBot CLI?: {OSBOT_ACTIVE}")
+    console_browser.append("\nNeed Support? Join the discord - https://discord.gg/SjVjQvm")
 
     try:
         while accs_created < NUM_OF_ACCS:
-            self.console_browser.append(f"Sleeping for {sleep_timer} seconds...")
+            console_browser.append(f"Sleeping for {sleep_timer} seconds...")
             time.sleep(sleep_timer)
-            self.console_browser.append("Starting create_account()")
+            console_browser.append("Starting create_account()")
 
             if USE_PROXIES:
                 proxy = get_proxy()
             else:
                 proxy = None
 
-            self.console_browser.append(f"Proxy: {proxy}")
+            console_browser.append(f"Proxy: {proxy}")
 
             payload = get_payload()
             submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy)
             if submit.ok:
                 if check_account(submit):
-                    self.console_browser.append("Account created successfully.")
+                    console_browser.append("Account created successfully.")
                     accs_created += 1
                     formatted_payload = save_account(payload, proxy=proxy)
-                    self.console_browser.append(f"Account created with the details: {formatted_payload}")
+                    console_browser.append(f"Account created with the details: {formatted_payload}")
                     if TRIBOT_ACTIVE:
                         use_tribot(payload['email1'], payload['password1'], proxy)
                     elif OSBOT_ACTIVE:
                         use_osbot(payload['email1'], payload['password1'], proxy)
                 else:
-                    self.console_browser.append("Account creation failed.")
+                    console_browser.append("Account creation failed.")
                     failure_counter += 1
                     if failure_counter == failure_threshold:
-                        self.console_browser.append(f"Failed {failure_counter} times. Let your IP cooldown or up the sleep timer.")
+                        console_browser.append(f"Failed {failure_counter} times. Let your IP cooldown or up the sleep timer.")
                         accs_created = NUM_OF_ACCS # End the creation loop
             else:
-                self.console_browser.append(f"Creation failed. Error code {submit.status_code}")
-                self.console_browser.append(submit.text)
+                console_browser.append(f"Creation failed. Error code {submit.status_code}")
+                console_browser.append(submit.text)
     except KeyboardInterrupt:
-        self.console_browser.append("User stopped the account creator.")
+        console_browser.append("User stopped the account creator.")
