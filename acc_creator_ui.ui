@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>511</width>
+    <height>462</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>511</width>
+    <height>462</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>511</width>
+    <height>462</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Gavins Account Creator</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="acc_groupbox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>161</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Account Settings</string>
+    </property>
+    <widget class="QLineEdit" name="account_password_field">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>141</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Account Password</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="username_prefix_field">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>141</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Username Prefix</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="client_groupbox">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>0</y>
+      <width>351</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Client Settings</string>
+    </property>
+    <widget class="QLineEdit" name="client_username_field">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Client Username</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="client_password_field">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Client Password</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="script_name_field">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Script Name</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="use_client_box">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>20</y>
+       <width>111</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>No Client</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>OSBot Client</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Tribot Client</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="creator_groupbox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>90</y>
+      <width>161</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Creator Settings</string>
+    </property>
+    <widget class="QLineEdit" name="accs_field">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>131</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Number of accounts</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="retry_timer_field">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>131</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>(sec) between creations</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="use_proxies_box">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>131</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="currentText">
+      <string>Don't use proxies</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Don't use proxies</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Use proxies</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="proxy_auth_box">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>131</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>IP Authentication</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>User/Pass Authentication</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <widget class="QTextBrowser" name="console_browser">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>200</y>
+      <width>511</width>
+      <height>241</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>170</y>
+      <width>291</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="create_accounts_button">
+       <property name="minimumSize">
+        <size>
+         <width>91</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Create Accounts</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="save_console_button">
+       <property name="minimumSize">
+        <size>
+         <width>91</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Save console</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="clear_console_button">
+       <property name="minimumSize">
+        <size>
+         <width>91</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Clear Console</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <zorder>client_groupbox</zorder>
+   <zorder>acc_groupbox</zorder>
+   <zorder>creator_groupbox</zorder>
+   <zorder>console_browser</zorder>
+   <zorder>create_accounts_button</zorder>
+   <zorder>clear_console_button</zorder>
+   <zorder>save_console_button</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>511</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>clear_console_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>clear_console()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>405</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>save_console_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>save_console()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>315</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>create_accounts_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>create_accounts()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>225</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>clear_console()</slot>
+  <slot>save_console()</slot>
+  <slot>create_accounts()</slot>
+  <slot>use_tribot()</slot>
+  <slot>use_osbot()</slot>
+  <slot>no_client()</slot>
+  <slot>use_proxies()</slot>
+  <slot>no_proxies()</slot>
+ </slots>
+</ui>
