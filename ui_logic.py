@@ -3,7 +3,7 @@ import acc_creator
 
 from datetime import datetime
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 
 from acc_creator_gui import Ui_MainWindow
 from modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
@@ -34,7 +34,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__()
         self.setupUi(self)
         QTimer.singleShot(1, self.load_settings) # Initialize settings after ui setup
-
 
     def load_settings(self):
         """Loads our settings from the settings.ini file"""
@@ -82,10 +81,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.console_browser.clear()
 
     def create_accounts(self):
-        acc_creator.create_account(self.console_browser)
+        update_text = QtWidgets.QApplication
+        # self.acc_creation_thread = AccountCreationThread(self.console_browser)
+        # self.acc_creation_thread.start()
+        acc_creator.create_account(self.console_browser, update_text)
 
 
-app = QtWidgets.QApplication(sys.argv)
-window = MainWindow()
-window.show()
-app.exec()
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec()
+
+
+if __name__ == '__main__':
+    main()
