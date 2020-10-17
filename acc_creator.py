@@ -150,7 +150,8 @@ def save_account(payload, proxy=None):
     return formatted_payload
 
 
-def create_account(console_browser):
+def create_account(console_browser, update_text):
+    # app = QtWidgets.QApplication(sys.argv)
     """Creates our account and returns the registration info"""
     accs_created = 0 #initialize
     failure_counter = 0 #initialize
@@ -162,11 +163,13 @@ def create_account(console_browser):
     console_browser.append(f"Will we use Tribot CLI?: {TRIBOT_ACTIVE}")
     console_browser.append(f"Will we use OSBot CLI?: {OSBOT_ACTIVE}")
     console_browser.append("\nNeed Support? Join the discord - https://discord.gg/SjVjQvm\n")
+    update_text.processEvents()
 
     while accs_created < NUM_OF_ACCS:
         console_browser.append(f"Sleeping for {sleep_timer} seconds...")
         # time.sleep(sleep_timer)
         console_browser.append("Starting create_account()")
+        update_text.processEvents()
 
         if USE_PROXIES:
             proxy = get_proxy()
@@ -174,6 +177,7 @@ def create_account(console_browser):
             proxy = None
 
         console_browser.append(f"Proxy: {proxy}")
+        update_text.processEvents()
 
         payload = get_payload()
         submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy)
@@ -183,16 +187,20 @@ def create_account(console_browser):
                 accs_created += 1
                 formatted_payload = save_account(payload, proxy=proxy)
                 console_browser.append(f"Account created with the details: {formatted_payload}")
+                update_text.processEvents()
                 if TRIBOT_ACTIVE:
                     use_tribot(payload['email1'], payload['password1'], proxy)
                 elif OSBOT_ACTIVE:
                     use_osbot(payload['email1'], payload['password1'], proxy)
             else:
                 console_browser.append("Account creation failed.")
+                update_text.processEvents()
                 failure_counter += 1
                 if failure_counter == failure_threshold:
                     console_browser.append(f"Failed {failure_counter} times. Let your IP cooldown or up the sleep timer.")
                     accs_created = NUM_OF_ACCS # End the creation loop
+                    update_text.processEvents()
         else:
             console_browser.append(f"Creation failed. Error code {submit.status_code}")
             console_browser.append(submit.text)
+            update_text.processEvents()

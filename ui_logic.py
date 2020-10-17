@@ -35,7 +35,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         QTimer.singleShot(1, self.load_settings) # Initialize settings after ui setup
 
-
     def load_settings(self):
         """Loads our settings from the settings.ini file"""
         self.console_browser.setText(f"Today's Date is: {str(datetime.now())}")
@@ -82,22 +81,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.console_browser.clear()
 
     def create_accounts(self):
-        self.acc_creation_thread = AccountCreationThread(self.console_browser)
-        self.acc_creation_thread.start()
-
-
-class AccountCreationThread(QThread):
-    slot1 = pyqtSignal(str)
-    def __init__(self, console_browser):
-        QThread.__init__(self)
-        self.console_browser = console_browser
-
-    def __del__(self):
-        self.wait()
-
-    def run(self):
-        self.slot1.emit(acc_creator.create_account(self.console_browser))
-        
+        update_text = QtWidgets.QApplication
+        # self.acc_creation_thread = AccountCreationThread(self.console_browser)
+        # self.acc_creation_thread.start()
+        acc_creator.create_account(self.console_browser, update_text)
 
 
 def main():
@@ -105,6 +92,7 @@ def main():
     window = MainWindow()
     window.show()
     app.exec()
+
 
 if __name__ == '__main__':
     main()
