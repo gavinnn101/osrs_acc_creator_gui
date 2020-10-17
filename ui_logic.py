@@ -3,7 +3,7 @@ import acc_creator
 
 from datetime import datetime
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 
 from acc_creator_gui import Ui_MainWindow
 from modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
@@ -82,10 +82,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.console_browser.clear()
 
     def create_accounts(self):
-        acc_creator.create_account(self.console_browser)
+        self.acc_creation_thread = AccountCreationThread(self.console_browser)
+        self.acc_creation_thread.start()
 
 
-app = QtWidgets.QApplication(sys.argv)
-window = MainWindow()
-window.show()
-app.exec()
+class AccountCreationThread(QThread):
+    slot1 = pyqtSignal(str)
+    def __init__(self, console_browser):
+        QThread.__init__(self)
+        self.console_browser = console_browser
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        self.slot1.emit(acc_creator.create_account(self.console_browser))
+        
+
+
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec()
+
+if __name__ == '__main__':
+    main()
