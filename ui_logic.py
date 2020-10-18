@@ -6,8 +6,10 @@ from datetime import datetime
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 
-from acc_creator_gui import Ui_MainWindow
+from gui_files.acc_creator_gui import Ui_MainWindow
 from modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
+from modules.licensing.creator_licensing import check_key
+
 
 
 # Get User settings
@@ -113,7 +115,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         with open('settings/settings.ini', 'w+') as config_file:
             config.write(config_file)
-        
+
         self.console_browser.append("\nSettings have been saved.\n")
 
 
@@ -134,10 +136,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 def main():
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    app.exec()
+    if check_key(): # If valid license, launch the creator
+        app = QtWidgets.QApplication(sys.argv)
+        window = MainWindow()
+        window.show()
+        app.exec()
+    else: # Invalid license or machine
+        with open('log.txt', 'a+') as log_file:
+            log_file.write(f"Today's Date is: {str(datetime.now())}\n")
+            log_file.write("Key in settings file not valid.\n")
 
 
 if __name__ == '__main__':

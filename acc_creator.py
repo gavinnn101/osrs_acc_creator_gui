@@ -151,15 +151,15 @@ def save_account(payload, proxy=None):
 
 def create_account(console_browser, update_text):
     """Creates our account and returns the registration info"""
-    accs_created = 0 #initialize
-    failure_counter = 0 #initialize
-    failure_threshold = 3 # If we fail this many times, the script will stop.
-    sleep_timer = 5 # This is how long we will sleep between account creations.
-
     NUM_OF_ACCS = get_user_settings()[4]
     TRIBOT_ACTIVE = get_tribot_settings()[0]
     OSBOT_ACTIVE = get_osbot_settings()[0]
     USE_PROXIES = get_user_settings()[0]
+    sleep_timer = get_user_settings()[8]
+
+    accs_created = 0 #initialize
+    failure_counter = 0 #initialize
+    failure_threshold = 3 # If we fail this many times, the script will stop.
 
     console_browser.append(f"\nWe'll make: {NUM_OF_ACCS} accounts.")
     console_browser.append(f"Will we use proxies?: {USE_PROXIES}")
