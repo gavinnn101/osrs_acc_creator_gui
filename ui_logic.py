@@ -1,6 +1,7 @@
 import sys
 import acc_creator
 
+from configparser import ConfigParser
 from datetime import datetime
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
@@ -9,7 +10,7 @@ from acc_creator_gui import Ui_MainWindow
 from modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
 
 
-# Pull settings from settings.ini
+# Get User settings
 site_key, site_url = get_site_settings()
 use_proxies = get_user_settings()[0]
 proxy_auth_type = get_user_settings()[1]
@@ -18,15 +19,19 @@ username_prefix = get_user_settings()[5]
 acc_password = get_user_settings()[6]
 retry_seconds = get_user_settings()[8]
 
+# Get Tribot settings
 use_tribot = get_tribot_settings()[0]
 tribot_username = get_tribot_settings()[1]
 tribot_password = get_tribot_settings()[2]
 tribot_script = get_tribot_settings()[3]
+tribot_script_args = get_tribot_settings()[4]
 
+# Get OSBot settings
 use_osbot = get_osbot_settings()[0]
 osbot_username = get_osbot_settings()[1]
 osbot_password = get_osbot_settings()[2]
 osbot_script = get_osbot_settings()[3]
+osbot_script_args = get_osbot_settings()[4]
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -59,16 +64,58 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.client_username_field.setText(osbot_username)
             self.client_password_field.setText(osbot_password)
             self.script_name_field.setText(osbot_script)
+            self.script_args_field.setText(osbot_script_args)
         elif use_tribot == 1:
             self.use_client_box.setCurrentIndex(2)
             self.client_username_field.setText(tribot_username)
             self.client_password_field.setText(tribot_password)
             self.script_name_field.setText(tribot_script)
+            self.script_args_field.setText(tribot_script_args)
         else:
             self.use_client_box.setCurrentIndex(0)
 
     def save_settings(self):
-        pass
+        # Run this inside of create_accounts()
+        config = ConfigParser()
+        try:
+            config.read('settings/settings.ini')
+        except FileNotFoundError:
+            sys.exit("settings.ini file not found. "
+                        "Make sure it's in the same directory.")
+
+        config.set('USER_SETTINGS', 'username_prefix', self.username_prefix_field.text())
+        config.set('USER_SETTINGS', 'password', self.account_password_field.text())
+        config.set('USER_SETTINGS', 'num_of_accs', str(self.accs_field.text()))
+        config.set('USER_SETTINGS', 'retry_seconds', str(self.retry_timer_field.text()))
+        config.set('USER_SETTINGS', 'use_proxies', str(self.use_proxies_box.currentIndex()))
+        if self.proxy_auth_box.currentIndex() == 0:
+            config.set('USER_SETTINGS', 'proxy_auth_type', '2')
+        else:
+            config.set('USER_SETTINGS', 'proxy_auth_type', '1')
+        
+        if self.use_client_box.currentIndex() == 0:
+            config.set('TRIBOT_CLI_SETTINGS', 'use_tribot', ('0'))
+            config.set('OSBOT_CLI_SETTINGS', 'use_osbot', ('0'))
+        elif self.use_client_box.currentIndex() == 1:
+            config.set('TRIBOT_CLI_SETTINGS', 'use_tribot', ('0'))
+            config.set('OSBOT_CLI_SETTINGS', 'use_osbot', ('1'))
+            config.set('OSBOT_CLI_SETTINGS', 'osbot_username', self.client_username_field.text())
+            config.set('OSBOT_CLI_SETTINGS', 'osbot_password', self.client_password_field.text())
+            config.set('OSBOT_CLI_SETTINGS', 'osbot_script', self.script_name_field.text())
+            config.set('OSBOT_CLI_SETTINGS', 'script_args', self.script_args_field.text())
+        else:
+            config.set('OSBOT_CLI_SETTINGS', 'use_osbot', ('0'))
+            config.set('TRIBOT_CLI_SETTINGS', 'use_tribot', ('1'))
+            config.set('TRIBOT_CLI_SETTINGS', 'tribot_username', self.client_username_field.text())
+            config.set('TRIBOT_CLI_SETTINGS', 'tribot_password', self.client_password_field.text())
+            config.set('TRIBOT_CLI_SETTINGS', 'tribot_script', self.script_name_field.text())
+            config.set('TRIBOT_CLI_SETTINGS', 'script_args', self.script_args_field.text())
+
+        with open('settings/settings.ini', 'w+') as config_file:
+            config.write(config_file)
+        
+        self.console_browser.append("\nSettings have been saved.\n")
+
 
     def save_console(self):
         """Saves the entire contents of the console to the log.txt file"""
@@ -81,9 +128,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.console_browser.clear()
 
     def create_accounts(self):
+        self.save_settings()
         update_text = QtWidgets.QApplication
-        # self.acc_creation_thread = AccountCreationThread(self.console_browser)
-        # self.acc_creation_thread.start()
         acc_creator.create_account(self.console_browser, update_text)
 
 

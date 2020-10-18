@@ -42,11 +42,9 @@ except FileNotFoundError:
              "Make sure it's in the same directory.")
 
 # Settings pulled from utility.py -> settings.ini file
-USE_PROXIES = get_user_settings()[0]
-NUM_OF_ACCS = get_user_settings()[4]
 SITE_URL = get_site_settings()[1]
-TRIBOT_ACTIVE = get_tribot_settings()[0]
-OSBOT_ACTIVE = get_osbot_settings()[0]
+
+
 
 
 
@@ -128,6 +126,7 @@ def check_account(submit):
 
 def save_account(payload, proxy=None):
     """Save the needed account information to created_accs.txt"""
+    USE_PROXIES = get_user_settings()[0]
     if USE_PROXIES:
         proxy_auth_type = get_user_settings()[1]
         proxy_ip = read_proxy(proxy, proxy_auth_type)[2]
@@ -151,12 +150,16 @@ def save_account(payload, proxy=None):
 
 
 def create_account(console_browser, update_text):
-    # app = QtWidgets.QApplication(sys.argv)
     """Creates our account and returns the registration info"""
     accs_created = 0 #initialize
     failure_counter = 0 #initialize
     failure_threshold = 3 # If we fail this many times, the script will stop.
     sleep_timer = 5 # This is how long we will sleep between account creations.
+
+    NUM_OF_ACCS = get_user_settings()[4]
+    TRIBOT_ACTIVE = get_tribot_settings()[0]
+    OSBOT_ACTIVE = get_osbot_settings()[0]
+    USE_PROXIES = get_user_settings()[0]
 
     console_browser.append(f"\nWe'll make: {NUM_OF_ACCS} accounts.")
     console_browser.append(f"Will we use proxies?: {USE_PROXIES}")
@@ -166,8 +169,9 @@ def create_account(console_browser, update_text):
     update_text.processEvents()
 
     while accs_created < NUM_OF_ACCS:
-        console_browser.append(f"Sleeping for {sleep_timer} seconds...")
-        # time.sleep(sleep_timer)
+        console_browser.append(f"\nSleeping for {sleep_timer} seconds...")
+        update_text.processEvents()
+        time.sleep(sleep_timer)
         console_browser.append("Starting create_account()")
         update_text.processEvents()
 
@@ -199,8 +203,10 @@ def create_account(console_browser, update_text):
                 if failure_counter == failure_threshold:
                     console_browser.append(f"Failed {failure_counter} times. Let your IP cooldown or up the sleep timer.")
                     accs_created = NUM_OF_ACCS # End the creation loop
+                    console_browser.append("Finished creating accounts.")
                     update_text.processEvents()
         else:
             console_browser.append(f"Creation failed. Error code {submit.status_code}")
             console_browser.append(submit.text)
             update_text.processEvents()
+    console_browser.append("\nFinished creating accounts.")

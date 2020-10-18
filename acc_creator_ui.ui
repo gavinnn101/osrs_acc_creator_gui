@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>511</width>
-    <height>462</height>
+    <width>486</width>
+    <height>474</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,293 +18,334 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>511</width>
-    <height>462</height>
+    <width>400</width>
+    <height>350</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>511</width>
-    <height>462</height>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Gavins Account Creator</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="acc_groupbox">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>161</width>
-      <height>91</height>
+      <width>491</width>
+      <height>461</height>
      </rect>
     </property>
-    <property name="title">
-     <string>Account Settings</string>
+    <property name="currentIndex">
+     <number>1</number>
     </property>
-    <widget class="QLineEdit" name="account_password_field">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>141</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>Account Password</string>
-     </property>
+    <widget class="QWidget" name="tba_tab">
+     <attribute name="title">
+      <string>Farm Manager</string>
+     </attribute>
     </widget>
-    <widget class="QLineEdit" name="username_prefix_field">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>141</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>Username Prefix</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="client_groupbox">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>0</y>
-      <width>351</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Client Settings</string>
-    </property>
-    <widget class="QLineEdit" name="client_username_field">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>113</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>Client Username</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="client_password_field">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>113</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>Client Password</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="script_name_field">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>113</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>Script Name</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="use_client_box">
-     <property name="geometry">
-      <rect>
-       <x>130</x>
-       <y>20</y>
-       <width>111</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>No Client</string>
+    <widget class="QWidget" name="creator_tab">
+     <attribute name="title">
+      <string>Account Creator</string>
+     </attribute>
+     <widget class="QGroupBox" name="creator_groupbox">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>90</y>
+        <width>161</width>
+        <height>131</height>
+       </rect>
       </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>OSBot Client</string>
+      <property name="title">
+       <string>Creator Settings</string>
       </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Tribot Client</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="creator_groupbox">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>90</y>
-      <width>161</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Creator Settings</string>
-    </property>
-    <widget class="QLineEdit" name="accs_field">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>131</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>Number of accounts</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="retry_timer_field">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>131</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>(sec) between creations</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="use_proxies_box">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>131</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="currentText">
-      <string>Don't use proxies</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>Don't use proxies</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Use proxies</string>
-      </property>
-     </item>
-    </widget>
-    <widget class="QComboBox" name="proxy_auth_box">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>131</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>IP Authentication</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>User/Pass Authentication</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
-   <widget class="QTextBrowser" name="console_browser">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>200</y>
-      <width>511</width>
-      <height>241</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>170</y>
-      <width>291</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="create_accounts_button">
-       <property name="minimumSize">
-        <size>
-         <width>91</width>
-         <height>23</height>
-        </size>
+      <widget class="QLineEdit" name="accs_field">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
        </property>
-       <property name="text">
-        <string>Create Accounts</string>
+       <property name="placeholderText">
+        <string>Number of accounts</string>
        </property>
       </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="save_console_button">
-       <property name="minimumSize">
-        <size>
-         <width>91</width>
-         <height>23</height>
-        </size>
+      <widget class="QLineEdit" name="retry_timer_field">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
        </property>
-       <property name="text">
-        <string>Save console</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="clear_console_button">
-       <property name="minimumSize">
-        <size>
-         <width>91</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Clear Console</string>
+       <property name="placeholderText">
+        <string>(sec) between creations</string>
        </property>
       </widget>
-     </item>
-    </layout>
+      <widget class="QComboBox" name="use_proxies_box">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>131</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="currentText">
+        <string>Don't use proxies</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Don't use proxies</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Use proxies</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QComboBox" name="proxy_auth_box">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>131</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>IP Authentication</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>User/Pass Authentication</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="client_groupbox">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>0</y>
+        <width>351</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Client Settings</string>
+      </property>
+      <widget class="QLineEdit" name="client_username_field">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>113</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Client Username</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="client_password_field">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>113</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Client Password</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="script_name_field">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>113</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Script Name</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="use_client_box">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>20</y>
+         <width>111</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>No Client</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>OSBot Client</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Tribot Client</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLineEdit" name="script_args_field">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>60</y>
+         <width>113</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>Script Args</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="acc_groupbox">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>161</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Account Settings</string>
+      </property>
+      <widget class="QLineEdit" name="account_password_field">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>141</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Account Password</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="username_prefix_field">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>141</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Username Prefix</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>170</y>
+        <width>287</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="create_accounts_button">
+         <property name="minimumSize">
+          <size>
+           <width>91</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Create Accounts</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="save_console_button">
+         <property name="minimumSize">
+          <size>
+           <width>91</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Save Console</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clear_console_button">
+         <property name="minimumSize">
+          <size>
+           <width>91</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Clear Console</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTextBrowser" name="console_browser">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>200</y>
+        <width>481</width>
+        <height>231</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
-   <zorder>client_groupbox</zorder>
-   <zorder>acc_groupbox</zorder>
-   <zorder>creator_groupbox</zorder>
-   <zorder>console_browser</zorder>
-   <zorder>create_accounts_button</zorder>
-   <zorder>clear_console_button</zorder>
-   <zorder>save_console_button</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>511</width>
+     <width>486</width>
      <height>21</height>
     </rect>
    </property>
