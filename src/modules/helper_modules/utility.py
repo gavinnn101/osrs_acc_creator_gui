@@ -34,7 +34,7 @@ def get_license_settings():
 	"""Gets and returns the License settings from settings.ini"""
 	config = ConfigParser()
 	try:
-		config.read('src/settings/settings.ini')
+		config.read('../src/settings/settings.ini')
 	except FileNotFoundError:
 		sys.exit("settings.ini file not found. "
 				 "Make sure it's in the same directory.")
@@ -47,7 +47,7 @@ def get_user_settings():
 	"""Gets and returns the USER_SETTINGS from settings.ini"""
 	config = ConfigParser()
 	try:
-		config.read('src/settings/settings.ini')
+		config.read('../src/settings/settings.ini')
 	except FileNotFoundError:
 		sys.exit("settings.ini file not found. "
 				 "Make sure it's in the same directory.")
@@ -71,7 +71,7 @@ def get_site_settings():
 	"""Return our [SITE_SETTINGS]"""
 	config = ConfigParser()
 	try:
-		config.read('src/settings/settings.ini')
+		config.read('../src/settings/settings.ini')
 	except FileNotFoundError:
 		sys.exit("settings.ini file not found. "
 				 "Make sure it's in the same directory.")
@@ -85,7 +85,7 @@ def get_tribot_settings():
 	"""Return our [TRIBOT_CLI_SETTINGS]"""
 	config = ConfigParser()
 	try:
-		config.read('src/settings/settings.ini')
+		config.read('../src/settings/settings.ini')
 	except FileNotFoundError:
 		sys.exit("settings.ini file not found. "
 				 "Make sure it's in the same directory.")
@@ -104,7 +104,7 @@ def get_osbot_settings():
 	"""Return our [OSBOT_CLI_SETTINGS]"""
 	config = ConfigParser()
 	try:
-		config.read('src/settings/settings.ini')
+		config.read('../src/settings/settings.ini')
 	except FileNotFoundError:
 		sys.exit("settings.ini file not found. "
 				 "Make sure it's in the same directory.")
