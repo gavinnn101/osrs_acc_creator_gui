@@ -8,8 +8,6 @@ from socket import error as socket_error
 try:
     from modules.helper_modules.utility import (get_index, read_proxy,
     get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
-    from modules.captcha_solvers.twocaptcha import twocaptcha_solver
-    from modules.captcha_solvers.anticaptcha import anticaptcha_solver
     from modules.bot_client_cli.tribot_cli import use_tribot
     from modules.bot_client_cli.osbot_cli import use_osbot
     import requests
@@ -36,10 +34,10 @@ HEADERS = {
 
 
 try:
-    PROXY_LIST = open("settings/proxy_list.txt", "r")
+    PROXY_LIST = open("src/settings/proxy_list.txt", "r")
 except FileNotFoundError:
     sys.exit("proxy_list.txt wasn't found. "
-             "Make sure it's in the same directory.")
+             "Make sure it's in the settings directory.")
 
 # The secret sauce
 SITE_URL = "https://secure.runescape.com/l=en/a=0/m=account-creation/g=oldscape/create_account"
