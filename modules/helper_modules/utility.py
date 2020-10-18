@@ -77,9 +77,8 @@ def get_site_settings():
 				 "Make sure it's in the same directory.")
 
 	site_key = config['SITE_SETTINGS'].get('site_key')
-	site_url = config['SITE_SETTINGS'].get('site_url')
 
-	return site_key, site_url
+	return site_key
 
 
 def get_tribot_settings():

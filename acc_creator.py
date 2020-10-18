@@ -41,11 +41,8 @@ except FileNotFoundError:
     sys.exit("proxy_list.txt wasn't found. "
              "Make sure it's in the same directory.")
 
-# Settings pulled from utility.py -> settings.ini file
-SITE_URL = get_site_settings()[1]
-
-
-
+# The secret sauce
+SITE_URL = "https://secure.runescape.com/l=en/a=0/m=account-creation/g=oldscape/create_account"
 
 
 def get_ip() -> str:

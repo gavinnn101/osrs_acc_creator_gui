@@ -13,7 +13,7 @@ from modules.licensing.creator_licensing import check_key
 
 
 # Get User settings
-site_key, site_url = get_site_settings()
+site_url = get_site_settings()
 use_proxies = get_user_settings()[0]
 proxy_auth_type = get_user_settings()[1]
 num_of_accs = get_user_settings()[4]
