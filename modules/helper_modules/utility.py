@@ -30,6 +30,19 @@ def read_proxy(proxy, proxy_auth_type):
 		return (proxy_username, proxy_password, proxy_ip, proxy_port)
 
 
+def get_license_settings():
+	"""Gets and returns the License settings from settings.ini"""
+	config = ConfigParser()
+	try:
+		config.read('settings/settings.ini')
+	except FileNotFoundError:
+		sys.exit("settings.ini file not found. "
+				 "Make sure it's in the same directory.")
+
+	license_key = config['LICENSE_SETTINGS'].get('license_key')
+
+	return license_key
+
 def get_user_settings():
 	"""Gets and returns the USER_SETTINGS from settings.ini"""
 	config = ConfigParser()
