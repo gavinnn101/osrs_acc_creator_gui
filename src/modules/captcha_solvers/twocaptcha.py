@@ -9,8 +9,8 @@ except ImportError as error:
 
 def twocaptcha_solver():
     """Handles and returns recaptcha answer for osrs account creation page"""
-    SITE_URL = get_site_settings()[1]
-    SITE_KEY = get_site_settings()[0]  # osrs site key
+    SITE_URL = None
+    SITE_KEY = None
     API_KEY = get_user_settings()[3]  # api key read from settings.ini
     if not API_KEY:
         raise ValueError("No API key was found in settings.ini.")

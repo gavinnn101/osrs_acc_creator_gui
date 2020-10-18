@@ -13,7 +13,7 @@ def get_license_settings():
 	"""Gets and returns the License settings from settings.ini"""
 	config = ConfigParser()
 	try:
-		config.read('settings/settings.ini')
+		config.read('src/settings/settings.ini')
 	except FileNotFoundError:
 		sys.exit("settings.ini file not found. "
 				 "Make sure it's in the same directory.")

@@ -80,7 +80,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Run this inside of create_accounts()
         config = ConfigParser()
         try:
-            config.read('settings/settings.ini')
+            config.read('src/settings/settings.ini')
         except FileNotFoundError:
             sys.exit("settings.ini file not found. "
                         "Make sure it's in the same directory.")
@@ -94,7 +94,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             config.set('USER_SETTINGS', 'proxy_auth_type', '2')
         else:
             config.set('USER_SETTINGS', 'proxy_auth_type', '1')
-        
+
         if self.use_client_box.currentIndex() == 0:
             config.set('TRIBOT_CLI_SETTINGS', 'use_tribot', ('0'))
             config.set('OSBOT_CLI_SETTINGS', 'use_osbot', ('0'))
@@ -113,7 +113,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             config.set('TRIBOT_CLI_SETTINGS', 'tribot_script', self.script_name_field.text())
             config.set('TRIBOT_CLI_SETTINGS', 'script_args', self.script_args_field.text())
 
-        with open('settings/settings.ini', 'w+') as config_file:
+        with open('src/settings/settings.ini', 'w+') as config_file:
             config.write(config_file)
 
         self.console_browser.append("\nSettings have been saved.\n")
