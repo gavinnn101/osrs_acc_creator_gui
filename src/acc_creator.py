@@ -5,14 +5,10 @@ import string
 import sys
 import time
 from socket import error as socket_error
-try:
-    from modules.helper_modules.utility import (get_index, read_proxy,
-    get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
-    from modules.bot_client_cli.tribot_cli import use_tribot
-    from modules.bot_client_cli.osbot_cli import use_osbot
-    import requests
-except ImportError as error:
-    print(error)
+from src.modules.helper_modules.utility import (get_index, read_proxy, get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
+from src.modules.bot_client_cli.tribot_cli import use_tribot
+from src.modules.bot_client_cli.osbot_cli import use_osbot
+import requests
 
 
 HEADERS = {
@@ -34,7 +30,7 @@ HEADERS = {
 
 
 try:
-    PROXY_LIST = open("src/settings/proxy_list.txt", "r")
+    PROXY_LIST = open("../src/settings/proxy_list.txt", "r")
 except FileNotFoundError:
     sys.exit("proxy_list.txt wasn't found. "
              "Make sure it's in the settings directory.")
@@ -52,7 +48,6 @@ def get_ip() -> str:
     if not users_ip:
         users_ip = requests.get('http://ip.42.pl/raw').text
     return users_ip
-
 
 
 def get_proxy() -> dict:

@@ -1,15 +1,15 @@
 import sys
-import acc_creator
+
+from src import acc_creator
 
 from configparser import ConfigParser
 from datetime import datetime
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 
-from gui_files.acc_creator_gui import Ui_MainWindow
-from modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
-from modules.licensing.creator_licensing import check_key
-
+from src.gui_files.acc_creator_gui import Ui_MainWindow
+from src.modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
+from src.modules.licensing.creator_licensing import check_key
 
 
 # Get User settings
@@ -80,7 +80,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Run this inside of create_accounts()
         config = ConfigParser()
         try:
-            config.read('src/settings/settings.ini')
+            config.read('../src/settings/settings.ini')
         except FileNotFoundError:
             sys.exit("settings.ini file not found. "
                         "Make sure it's in the same directory.")
@@ -113,11 +113,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             config.set('TRIBOT_CLI_SETTINGS', 'tribot_script', self.script_name_field.text())
             config.set('TRIBOT_CLI_SETTINGS', 'script_args', self.script_args_field.text())
 
-        with open('src/settings/settings.ini', 'w+') as config_file:
+        with open('../src/settings/settings.ini', 'w+') as config_file:
             config.write(config_file)
 
         self.console_browser.append("\nSettings have been saved.\n")
-
 
     def save_console(self):
         """Saves the entire contents of the console to the log.txt file"""
