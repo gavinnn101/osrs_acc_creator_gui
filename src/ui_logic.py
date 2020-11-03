@@ -1,11 +1,12 @@
 import sys
+import traceback
 
 from src import acc_creator
 
 from configparser import ConfigParser
 from datetime import datetime
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import QTimer, QThread, pyqtSignal
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import QTimer, QThreadPool, pyqtSlot, QRunnable
 
 from src.gui_files.acc_creator_gui import Ui_MainWindow
 from src.modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
@@ -36,15 +37,50 @@ osbot_script = get_osbot_settings()[3]
 osbot_script_args = get_osbot_settings()[4]
 
 
+class Worker(QRunnable):
+    """
+    Worker thread
+
+    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
+    :param callback: The function callback to run on this worker thread. Supplied args and
+                     kwargs will be passed through to the runner.
+    :type callback: function
+    :param args: Arguments to pass to the callback function
+    :param kwargs: Keywords to pass to the callback function
+    """
+
+    def __init__(self, fn, *args, **kwargs):
+        super(Worker, self).__init__()
+
+        # Store constructor arguments (re-used for processing)
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+
+    @pyqtSlot()
+    def run(self):
+        """
+        Initialise the runner function with passed args, kwargs.
+        """
+
+        # Retrieve args/kwargs here; and fire processing using them
+        try:
+            self.fn(*self.args, **self.kwargs)
+        except:
+            traceback.print_exc()
+
+
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
-        QTimer.singleShot(1, self.load_settings) # Initialize settings after ui setup
+        QTimer.singleShot(1, self.load_settings)  # Initialize settings after ui setup
+        self.threadpool = QThreadPool.globalInstance()
 
     def load_settings(self):
         """Loads our settings from the settings.ini file"""
-        self.console_browser.setText(f"Today's Date is: {str(datetime.now())}")
+        self.console_browser.setText(f"Today's Date is: {str(datetime.now().replace(microsecond=0))}")
         self.username_prefix_field.setText(username_prefix)
         self.account_password_field.setText(acc_password)
         self.accs_field.setText(str(num_of_accs))
@@ -83,7 +119,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             config.read('../src/settings/settings.ini')
         except FileNotFoundError:
             sys.exit("settings.ini file not found. "
-                        "Make sure it's in the same directory.")
+                     "Make sure it's in the same directory.")
 
         config.set('USER_SETTINGS', 'username_prefix', self.username_prefix_field.text())
         config.set('USER_SETTINGS', 'password', self.account_password_field.text())
@@ -120,8 +156,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def save_console(self):
         """Saves the entire contents of the console to the log.txt file"""
-        log = self.console_browser.toPlainText()
-        with open('log.txt', 'a+') as log_file:
+        log = (f"{self.console_browser.toPlainText()}\n")
+        with open('../src/log.txt', 'a+') as log_file:
             log_file.write(log)
 
     def clear_console(self):
@@ -130,19 +166,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def create_accounts(self):
         self.save_settings()
-        update_text = QtWidgets.QApplication
-        acc_creator.create_account(self.console_browser, update_text)
+
+        worker = Worker(acc_creator.create_account, self.console_browser)
+        self.threadpool.start(worker)
 
 
 def main():
-    if check_key(): # If valid license, launch the creator
+    if check_key():  # If valid license, launch the creator
         app = QtWidgets.QApplication(sys.argv)
         window = MainWindow()
         window.show()
         app.exec()
-    else: # Invalid license or machine
+    else:  # Invalid license or machine
         with open('log.txt', 'a+') as log_file:
-            log_file.write(f"Today's Date is: {str(datetime.now())}\n")
+            log_file.write(f"Today's Date is: {str(datetime.now().replace(microsecond=0))}\n")
             log_file.write("Key in settings file not valid.\n")
 
 
