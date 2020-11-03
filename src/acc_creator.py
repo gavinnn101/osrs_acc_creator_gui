@@ -1,5 +1,6 @@
 """Creates accounts based on settings.ini using our logic modules"""
 #!/usr/bin/env python3
+import sys
 import random
 import string
 import sys
@@ -113,7 +114,6 @@ def check_account(submit):
         return False
 
 
-
 def save_account(payload, proxy=None):
     """Save the needed account information to created_accs.txt"""
     USE_PROXIES = get_user_settings()[0]
@@ -132,14 +132,14 @@ def save_account(payload, proxy=None):
                              f" Birthday:{payload['month']}/{payload['day']}/{payload['year']},"
                              f" Proxy:{proxy}")
     else:
-        formatted_payload = (f"\n{payload['email1']}:{payload['password1']}")
+        formatted_payload = f"\n{payload['email1']}:{payload['password1']}"
 
-    with open("created_accs.txt", "a+") as acc_list:
+    with open("../src/created_accs.txt", "a+") as acc_list:
         acc_list.write(formatted_payload)
     return formatted_payload
 
 
-def create_account(console_browser, update_text):
+def create_account(console_browser):
     """Creates our account and returns the registration info"""
     NUM_OF_ACCS = get_user_settings()[4]
     TRIBOT_ACTIVE = get_tribot_settings()[0]
@@ -147,23 +147,21 @@ def create_account(console_browser, update_text):
     USE_PROXIES = get_user_settings()[0]
     sleep_timer = get_user_settings()[8]
 
-    accs_created = 0 #initialize
-    failure_counter = 0 #initialize
-    failure_threshold = 3 # If we fail this many times, the script will stop.
+    accs_created = 0  # initialize
+    failure_counter = 0  # initialize
+    failure_threshold = 3  # If we fail this many times, the script will stop.
 
     console_browser.append(f"\nWe'll make: {NUM_OF_ACCS} accounts.")
     console_browser.append(f"Will we use proxies?: {USE_PROXIES}")
     console_browser.append(f"Will we use Tribot CLI?: {TRIBOT_ACTIVE}")
     console_browser.append(f"Will we use OSBot CLI?: {OSBOT_ACTIVE}")
     console_browser.append("\nNeed Support? Join the discord - https://discord.gg/SjVjQvm\n")
-    update_text.processEvents()
 
     while accs_created < NUM_OF_ACCS:
         console_browser.append(f"\nSleeping for {sleep_timer} seconds...")
-        update_text.processEvents()
-        time.sleep(sleep_timer)
+        time.sleep(sleep_timer)  # TODO: Replace time.sleep with QTimer.singleshot (I believe this will fix the malformed text in the console)
+
         console_browser.append("Starting create_account()")
-        update_text.processEvents()
 
         if USE_PROXIES:
             proxy = get_proxy()
@@ -171,7 +169,6 @@ def create_account(console_browser, update_text):
             proxy = None
 
         console_browser.append(f"Proxy: {proxy}")
-        update_text.processEvents()
 
         payload = get_payload()
         submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy)
@@ -181,22 +178,18 @@ def create_account(console_browser, update_text):
                 accs_created += 1
                 formatted_payload = save_account(payload, proxy=proxy)
                 console_browser.append(f"Account created with the details: {formatted_payload}")
-                update_text.processEvents()
                 if TRIBOT_ACTIVE:
                     use_tribot(payload['email1'], payload['password1'], proxy)
                 elif OSBOT_ACTIVE:
                     use_osbot(payload['email1'], payload['password1'], proxy)
             else:
                 console_browser.append("Account creation failed.")
-                update_text.processEvents()
                 failure_counter += 1
                 if failure_counter == failure_threshold:
-                    console_browser.append(f"Failed {failure_counter} times. Let your IP cooldown or up the sleep timer.")
-                    accs_created = NUM_OF_ACCS # End the creation loop
+                    console_browser.append(f"Failed {failure_counter} times. Let your IP cool down or up the sleep timer.")
+                    accs_created = NUM_OF_ACCS  # End the creation loop
                     console_browser.append("Finished creating accounts.")
-                    update_text.processEvents()
         else:
             console_browser.append(f"Creation failed. Error code {submit.status_code}")
             console_browser.append(submit.text)
-            update_text.processEvents()
     console_browser.append("\nFinished creating accounts.")
