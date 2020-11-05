@@ -6,7 +6,7 @@ from src import acc_creator
 from configparser import ConfigParser
 from datetime import datetime
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTimer, QThreadPool, pyqtSlot, QRunnable
+from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, QTimer, QThreadPool, QRunnable
 
 from src.gui_files.acc_creator_gui import Ui_MainWindow
 from src.modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
@@ -37,6 +37,10 @@ osbot_script = get_osbot_settings()[3]
 osbot_script_args = get_osbot_settings()[4]
 
 
+class WorkerSignals(QObject):
+    progress = pyqtSignal(str)
+
+
 class Worker(QRunnable):
     """
     Worker thread
@@ -49,6 +53,7 @@ class Worker(QRunnable):
     :param args: Arguments to pass to the callback function
     :param kwargs: Keywords to pass to the callback function
     """
+    test = pyqtSignal(str)
 
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
@@ -57,6 +62,8 @@ class Worker(QRunnable):
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
+        self.signals = WorkerSignals()
+        self.kwargs['progress_callback'] = self.signals.progress  # So we can emit our text output to the GUI thread
 
     @pyqtSlot()
     def run(self):
@@ -72,11 +79,17 @@ class Worker(QRunnable):
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+    update_text = pyqtSignal(str)
+
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         QTimer.singleShot(1, self.load_settings)  # Initialize settings after ui setup
         self.threadpool = QThreadPool.globalInstance()
+        self.update_text.connect(self.append_text)
+
+    def append_text(self, msg):
+        self.console_browser.append(msg)
 
     def load_settings(self):
         """Loads our settings from the settings.ini file"""
@@ -164,15 +177,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """Clears the entire contents of the console"""
         self.console_browser.clear()
 
-    def create_accounts(self):
+    def create_accounts(self, progress_callback):
         self.save_settings()
-
-        worker = Worker(acc_creator.create_account, self.console_browser)
+        worker = Worker(acc_creator.create_account, progress_callback)
+        worker.signals.progress.connect(self.append_text)
         self.threadpool.start(worker)
 
 
 def main():
-    if check_key():  # If valid license, launch the creator
+    if check_key():  # If valid license, launch the program
         app = QtWidgets.QApplication(sys.argv)
         window = MainWindow()
         window.show()
