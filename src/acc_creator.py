@@ -139,7 +139,7 @@ def save_account(payload, proxy=None):
     return formatted_payload
 
 
-def create_account(console_browser):
+def create_account(append_text, progress_callback):
     """Creates our account and returns the registration info"""
     NUM_OF_ACCS = get_user_settings()[4]
     TRIBOT_ACTIVE = get_tribot_settings()[0]
@@ -151,45 +151,45 @@ def create_account(console_browser):
     failure_counter = 0  # initialize
     failure_threshold = 3  # If we fail this many times, the script will stop.
 
-    console_browser.append(f"\nWe'll make: {NUM_OF_ACCS} accounts.")
-    console_browser.append(f"Will we use proxies?: {USE_PROXIES}")
-    console_browser.append(f"Will we use Tribot CLI?: {TRIBOT_ACTIVE}")
-    console_browser.append(f"Will we use OSBot CLI?: {OSBOT_ACTIVE}")
-    console_browser.append("\nNeed Support? Join the discord - https://discord.gg/SjVjQvm\n")
+    progress_callback.emit(f"\nWe'll make: {NUM_OF_ACCS} accounts.")
+    progress_callback.emit(f"Will we use proxies?: {USE_PROXIES}")
+    progress_callback.emit(f"Will we use Tribot CLI?: {TRIBOT_ACTIVE}")
+    progress_callback.emit(f"Will we use OSBot CLI?: {OSBOT_ACTIVE}")
+    progress_callback.emit("\nNeed Support? Join the discord - https://discord.gg/SjVjQvm\n")
 
     while accs_created < NUM_OF_ACCS:
-        console_browser.append(f"\nSleeping for {sleep_timer} seconds...")
+        progress_callback.emit(f"\nSleeping for {sleep_timer} seconds...")
         time.sleep(sleep_timer)  # TODO: Replace time.sleep with QTimer.singleshot (I believe this will fix the malformed text in the console)
 
-        console_browser.append("Starting create_account()")
+        progress_callback.emit("Starting create_account()")
 
         if USE_PROXIES:
             proxy = get_proxy()
         else:
             proxy = None
 
-        console_browser.append(f"Proxy: {proxy}")
+        progress_callback.emit(f"Proxy: {proxy}")
 
         payload = get_payload()
         submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy)
         if submit.ok:
             if check_account(submit):
-                console_browser.append("Account created successfully.")
+                progress_callback.emit("Account created successfully.")
                 accs_created += 1
                 formatted_payload = save_account(payload, proxy=proxy)
-                console_browser.append(f"Account created with the details: {formatted_payload}")
+                progress_callback.emit(f"Account created with the details: {formatted_payload}")
                 if TRIBOT_ACTIVE:
                     use_tribot(payload['email1'], payload['password1'], proxy)
                 elif OSBOT_ACTIVE:
                     use_osbot(payload['email1'], payload['password1'], proxy)
             else:
-                console_browser.append("Account creation failed.")
+                progress_callback.emit("Account creation failed.")
                 failure_counter += 1
                 if failure_counter == failure_threshold:
-                    console_browser.append(f"Failed {failure_counter} times. Let your IP cool down or up the sleep timer.")
+                    progress_callback.emit(f"Failed {failure_counter} times. Let your IP cool down or up the sleep timer.")
                     accs_created = NUM_OF_ACCS  # End the creation loop
-                    console_browser.append("Finished creating accounts.")
+                    progress_callback.emit("Finished creating accounts.")
         else:
-            console_browser.append(f"Creation failed. Error code {submit.status_code}")
-            console_browser.append(submit.text)
-    console_browser.append("\nFinished creating accounts.")
+            progress_callback.emit(f"Creation failed. Error code {submit.status_code}")
+            progress_callback.emit(submit.text)
+    progress_callback.emit("\nFinished creating accounts.")
