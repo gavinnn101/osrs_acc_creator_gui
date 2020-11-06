@@ -1,6 +1,24 @@
-# OSRS Account Creator - GUI Edition
+# Gavin's OSRS Account Creator - GUI Edition
 
-Gavin's OSRS Account Creator is a python program to create Runescape accounts without the use of captcha solvers or proxies(optional.) Includes OSBot/Tribot CLI integration, custom username/password, etc.
+Gavin's OSRS Account Creator is a python program that is used to create Runescape accounts without the use of captcha solvers or proxies(optional.) Includes OSBot/Tribot CLI integration to automatically run scripts after creation, custom username/password, etc in an easy to use GUI.
+
+# Feature List
+
+  - OSRS Account settings
+    - Custom username prefix
+    - Custom password
+  - Creator Settings
+    - Number of accounts to create
+    - Custom sleep timer between account creations (for IP cooldown, etc)
+    - Proxy support (username/password or IP Authentication supported)
+  - Bot Client Settings (Tribot/OSBot - optional)
+    - Use any script in your account's repo (script arguments supported)
+  - Creator GUI features
+    - Multithreaded so no freezes or glitches while creating accounts
+    - Save full console output to log file
+    - Clear contents of console
+    - Create accounts (Will run based on how many accounts to create setting)
+        - Created accounts will save to created_accs.txt file in program's folder in username:password format
 
 Support, requests, etc can be found on discord: https://discord.gg/SjVjQvm
 
@@ -11,7 +29,7 @@ anticaptcha.com referral: http://getcaptchasolution.com/njbmecwjpo
 
 ## Usage
 
-Edit the osrs_acc_creator_master/src/settings/settings.ini to include or license key and then you can run the Account Creator program.
+Edit the osrs_acc_creator_master/src/settings/settings.ini to include your license key and then you can run the Account Creator program.
 
 ## License
 [GPL](https://choosealicense.com/licenses/gpl-3.0/)
