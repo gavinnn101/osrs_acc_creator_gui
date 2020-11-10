@@ -15,6 +15,7 @@ Gavin's OSRS Account Creator is a python program that is used to create Runescap
     - Use any script in your account's repo (script arguments supported)
     - OSBot:
       - Can use a local script via script name or an SDN script via script ID(https://osbot.org/forum/topic/155007-how-to-find-script-id-for-free-scripts/)
+      - For OSBot, make sure the "script args" field is set to "none" if you dont want to provide arguments. 
   - Creator GUI features
     - Multithreaded so no freezes or glitches while creating accounts
     - Save full console output to log file
