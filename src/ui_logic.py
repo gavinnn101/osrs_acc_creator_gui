@@ -1,5 +1,6 @@
 import sys
 import traceback
+import time
 
 from src import acc_creator
 
@@ -11,6 +12,7 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, QTimer, QThreadPool, QRu
 from src.gui_files.acc_creator_gui import Ui_MainWindow
 from src.modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
 from src.modules.licensing.creator_licensing import check_key
+from src.modules.updater.updater import check_update
 
 
 # Get User settings
@@ -169,7 +171,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def save_console(self):
         """Saves the entire contents of the console to the log.txt file"""
-        log = (f"{self.console_browser.toPlainText()}\n")
+        log = f"{self.console_browser.toPlainText()}\n"
         with open('../src/log.txt', 'a+') as log_file:
             log_file.write(log)
 
@@ -185,11 +187,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 def main():
-    if check_key():  # If valid license, launch the program
-        app = QtWidgets.QApplication(sys.argv)
-        window = MainWindow()
-        window.show()
-        app.exec()
+    if check_key():  # If valid license, check for an update
+        if check_update():  # We're on the latest version
+            app = QtWidgets.QApplication(sys.argv)
+            window = MainWindow()
+            window.show()
+            app.exec()
+        else:  # Installed new version of the program
+            time.sleep(5)
+            sys.exit()
     else:  # Invalid license or machine
         with open('log.txt', 'a+') as log_file:
             log_file.write(f"Today's Date is: {str(datetime.now().replace(microsecond=0))}\n")
