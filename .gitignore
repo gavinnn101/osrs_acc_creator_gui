@@ -131,6 +131,11 @@ dmypy.json
 # User defined files
 settings/
 created_accs.txt
+TRiBot/
+osbot 2.6.4.jar
 
 # .git
 .git
+
+# Pycharm
+.idea

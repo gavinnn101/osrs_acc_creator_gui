@@ -89,9 +89,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         QTimer.singleShot(1, self.load_settings)  # Initialize settings after ui setup
         self.threadpool = QThreadPool.globalInstance()
         self.update_text.connect(self.append_text)
+        self.use_client_box.currentIndexChanged.connect(self.on_client_change, self.use_client_box.currentIndex())
 
     def append_text(self, msg):
         self.console_browser.append(msg)
+
+    def on_client_change(self, value):
+        if value == 1:
+            self.client_username_field.setText(osbot_username)
+            self.client_password_field.setText(osbot_password)
+            self.script_name_field.setText(osbot_script)
+            self.script_args_field.setText(osbot_script_args)
+        elif value == 2:
+            self.use_client_box.setCurrentIndex(2)
+            self.client_username_field.setText(tribot_username)
+            self.client_password_field.setText(tribot_password)
+            self.script_name_field.setText(tribot_script)
+            self.script_args_field.setText(tribot_script_args)
 
     def load_settings(self):
         """Loads our settings from the settings.ini file"""
