@@ -1,6 +1,12 @@
 """Module with utility functions"""
 from configparser import ConfigParser
 import sys
+from datetime import datetime
+
+
+def timestamp():
+	return f"[{datetime.now().time().replace(microsecond=0)}]: "
+
 
 def get_index(input_string, sub_string, ordinal):
 	"""Returns the index of substring provided"""
@@ -13,21 +19,21 @@ def get_index(input_string, sub_string, ordinal):
 def read_proxy(proxy, proxy_auth_type):
 	proxy = str(proxy)
 	print(proxy)
-	if proxy_auth_type == 1: # Formatting based on user:pass authentication
+	if proxy_auth_type == 1:  # Formatting based on user:pass authentication
 		proxy_username = proxy[get_index(proxy, '/', 2)+1:get_index(proxy, ':', 3)]
 		proxy_password = proxy[get_index(proxy, ':', 3)+1:get_index(proxy, '@', 1)]
 		proxy_ip = proxy[get_index(proxy, '@', 1)+1:get_index(proxy, ':', 4)]
 		proxy_port = proxy[get_index(proxy, ':', 4)+1:get_index(proxy, "'", 4)]
 
-		return (proxy_username, proxy_password, proxy_ip, proxy_port)
+		return proxy_username, proxy_password, proxy_ip, proxy_port
 
-	else: # Formatting based on IP authentication
+	else:  # Formatting based on IP authentication
 		proxy_username = None
 		proxy_password = None
 		proxy_ip = proxy[get_index(proxy, '@', 1)+1:get_index(proxy, ':', 4)]
 		proxy_port = proxy[get_index(proxy, ':', 4)+1:get_index(proxy, "'", 4)]
 
-		return (proxy_username, proxy_password, proxy_ip, proxy_port)
+		return proxy_username, proxy_password, proxy_ip, proxy_port
 
 
 def get_license_settings():
@@ -42,6 +48,7 @@ def get_license_settings():
 	license_key = config['LICENSE_SETTINGS'].get('license_key')
 
 	return license_key
+
 
 def get_user_settings():
 	"""Gets and returns the USER_SETTINGS from settings.ini"""

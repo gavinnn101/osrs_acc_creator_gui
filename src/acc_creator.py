@@ -5,8 +5,7 @@ import random
 import string
 import sys
 import time
-from socket import error as socket_error
-from src.modules.helper_modules.utility import (get_index, read_proxy, get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
+from src.modules.helper_modules.utility import (timestamp, read_proxy, get_user_settings, get_tribot_settings, get_osbot_settings)
 from src.modules.bot_client_cli.tribot_cli import use_tribot
 from src.modules.bot_client_cli.osbot_cli import use_osbot
 import requests
@@ -159,9 +158,9 @@ def create_account(append_text, progress_callback):
 
     while accs_created < NUM_OF_ACCS:
         progress_callback.emit(f"\nSleeping for {sleep_timer} seconds...")
-        time.sleep(sleep_timer)  # TODO: Replace time.sleep with QTimer.singleshot (I believe this will fix the malformed text in the console)
+        time.sleep(sleep_timer)
 
-        progress_callback.emit("Starting create_account()")
+        progress_callback.emit(f"{timestamp()}Starting create_account()")
 
         if USE_PROXIES:
             proxy = get_proxy()
@@ -179,9 +178,14 @@ def create_account(append_text, progress_callback):
                 formatted_payload = save_account(payload, proxy=proxy)
                 progress_callback.emit(f"Account created with the details: {formatted_payload}")
                 if TRIBOT_ACTIVE:
-                    use_tribot(payload['email1'], payload['password1'], proxy)
+                    cmd = use_tribot(payload['email1'], payload['password1'], proxy)
+                    progress_callback.emit("\nLoading Tribot with the following settings...")
+                    progress_callback.emit(cmd)
                 elif OSBOT_ACTIVE:
-                    use_osbot(payload['email1'], payload['password1'], proxy)
+                    cmd = use_osbot(payload['email1'], payload['password1'], proxy)
+                    progress_callback.emit("\nLoading OSBot with the following settings...")
+                    progress_callback.emit(cmd)
+
             else:
                 progress_callback.emit("Account creation failed.")
                 failure_counter += 1
@@ -192,4 +196,4 @@ def create_account(append_text, progress_callback):
         else:
             progress_callback.emit(f"Creation failed. Error code {submit.status_code}")
             progress_callback.emit(submit.text)
-    progress_callback.emit("\nFinished creating accounts.")
+    progress_callback.emit(f"\n{timestamp()}Finished creating accounts.")
