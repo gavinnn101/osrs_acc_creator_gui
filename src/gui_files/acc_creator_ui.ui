@@ -51,12 +51,52 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
-    <widget class="QWidget" name="tba_tab">
+    <widget class="QWidget" name="farm_manager_tab">
      <attribute name="title">
       <string>Farm Manager</string>
      </attribute>
+     <widget class="QTableWidget" name="farm_manager_table">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>481</width>
+        <height>431</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>UID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Username</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Password</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Proxy</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Account Type</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Current Script</string>
+       </property>
+      </column>
+     </widget>
     </widget>
     <widget class="QWidget" name="creator_tab">
      <attribute name="title">
@@ -338,6 +378,80 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="proxy_tab">
+     <attribute name="title">
+      <string>Proxy Manager</string>
+     </attribute>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>390</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="add_proxy_button">
+         <property name="text">
+          <string>Add Proxy</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="remove_proxy_button">
+         <property name="text">
+          <string>Remove Proxy</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTableWidget" name="proxy_table">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>481</width>
+        <height>391</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Proxy IP</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Proxy Port</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Proxy Username</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Proxy Password</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QPushButton" name="save_proxies_button">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>400</y>
+        <width>91</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Proxy List</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -351,8 +465,42 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>username_prefix_field</tabstop>
+  <tabstop>account_password_field</tabstop>
+  <tabstop>accs_field</tabstop>
+  <tabstop>retry_timer_field</tabstop>
+  <tabstop>use_proxies_box</tabstop>
+  <tabstop>proxy_auth_box</tabstop>
+  <tabstop>client_username_field</tabstop>
+  <tabstop>client_password_field</tabstop>
+  <tabstop>script_name_field</tabstop>
+  <tabstop>script_args_field</tabstop>
+  <tabstop>use_client_box</tabstop>
+  <tabstop>create_accounts_button</tabstop>
+  <tabstop>save_console_button</tabstop>
+  <tabstop>clear_console_button</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>console_browser</tabstop>
+ </tabstops>
  <resources/>
  <connections>
+  <connection>
+   <sender>create_accounts_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>create_accounts()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>225</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
   <connection>
    <sender>clear_console_button</sender>
    <signal>clicked()</signal>
@@ -386,18 +534,50 @@
    </hints>
   </connection>
   <connection>
-   <sender>create_accounts_button</sender>
+   <sender>add_proxy_button</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>create_accounts()</slot>
+   <slot>add_proxy()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>225</x>
-     <y>202</y>
+     <x>190</x>
+     <y>453</y>
     </hint>
     <hint type="destinationlabel">
-     <x>255</x>
-     <y>230</y>
+     <x>242</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>remove_proxy_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>remove_proxy()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>272</x>
+     <y>453</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>save_proxies_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>save_proxies()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>454</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>
@@ -411,5 +591,8 @@
   <slot>no_client()</slot>
   <slot>use_proxies()</slot>
   <slot>no_proxies()</slot>
+  <slot>add_proxy()</slot>
+  <slot>remove_proxy()</slot>
+  <slot>save_proxies()</slot>
  </slots>
 </ui>
