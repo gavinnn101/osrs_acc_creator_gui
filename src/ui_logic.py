@@ -118,18 +118,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             with open("../src/settings/proxy_list.txt", "a+") as proxy_file:
                 if os.stat("../src/settings/proxy_list.txt").st_size == 0:
                     current_proxy = format_proxy(current_proxy)
-                    print(current_proxy)
-                    print(type(current_proxy))
                     if current_proxy:
                         proxy_file.write(current_proxy)
-                        print(f"Wrote to file: {current_proxy}")
                 else:
                     current_proxy = format_proxy(current_proxy)
                     if current_proxy:
                         proxy_file.write("\n")
                         proxy_file.write(current_proxy)
-
-            print("Proxies have been saved.")
 
         def format_proxy(proxy_dict):
             """Formats our proxy dictionary to an acceptable string that can be written to file."""
@@ -161,17 +156,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             print(formatted_proxy)
 
         open("../src/settings/proxy_list.txt", 'w').close()
-        print("cleared proxy file")
 
         row_count = self.proxy_table.rowCount()
-        print(f"We will save {row_count} rows.")
 
         try:
             for row in range(row_count):
                 # Recreate the dictionary for each row.
                 # No reason to save all of the proxies in memory since the proxy_list.txt is the source of truth
                 proxy = {"proxy_ip": None, "proxy_port": None, "proxy_username": None, "proxy_password": None}
-                print(f"Saving row: {row}")
                 counter = 0
 
                 # Loop over the columns in the current row and store the data in the "proxy" dictionary to save later
@@ -185,10 +177,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     except AttributeError:
                         proxy[field] = None
                     counter += 1
-                print(proxy)
+                print(f"Saving proxy: {proxy}")
                 save_proxy(proxy)
         except Exception:
             traceback.print_exc()
+        print("Proxies have been saved.")
 
     def add_proxy(self):
         self.proxy_table.insertRow(self.proxy_table.rowCount())
@@ -268,8 +261,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     traceback.print_exc()
 
         load_proxies()
+        # Clear the proxy file since we'll rewrite on save.
         open("../src/settings/proxy_list.txt", 'w').close()
-        print("cleared proxy file")
 
     def save_settings(self):
         # Run this inside of create_accounts()
