@@ -22,6 +22,9 @@ Gavin's OSRS Account Creator is a python program that is used to create Runescap
     - Clear contents of console
     - Create accounts (Will run based on how many accounts to create setting)
         - Created accounts will save to created_accs.txt file in program's folder in username:password format
+    - Proxy Manager
+      - Add and remove proxies
+        - NOTE: If the proxy doesn't use a username and password, leave the fields blank.
 
 Support, requests, etc can be found on discord: https://discord.gg/SjVjQvm
 
