@@ -138,7 +138,7 @@ def save_account(payload, proxy=None):
     return formatted_payload
 
 
-def create_account(progress_callback):
+def create_account(append_text, progress_callback):
     """Creates our account and returns the registration info"""
     NUM_OF_ACCS = get_user_settings()[4]
     TRIBOT_ACTIVE = get_tribot_settings()[0]
@@ -157,6 +157,8 @@ def create_account(progress_callback):
     progress_callback.emit("\nNeed Support? Join the discord - https://discord.gg/SjVjQvm\n")
 
     while accs_created < NUM_OF_ACCS:
+        if NUM_OF_ACCS == 0:
+            break
         progress_callback.emit(f"\nSleeping for {sleep_timer} seconds...")
         time.sleep(sleep_timer)
 
