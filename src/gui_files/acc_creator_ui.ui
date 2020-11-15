@@ -37,6 +37,10 @@
   <property name="windowTitle">
    <string>Gavins Account Creator</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>roboticon.png</normaloff>roboticon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
     <property name="enabled">
@@ -51,7 +55,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="farm_manager_tab">
      <attribute name="title">

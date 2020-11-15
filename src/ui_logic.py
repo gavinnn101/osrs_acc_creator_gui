@@ -269,37 +269,40 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         config = ConfigParser()
         try:
             config.read('../src/settings/settings.ini')
-        except FileNotFoundError:
-            sys.exit("settings.ini file not found. "
-                     "Make sure it's in the same directory.")
+        except Exception as e:
+            print(e)
 
-        config.set('USER_SETTINGS', 'username_prefix', self.username_prefix_field.text())
-        config.set('USER_SETTINGS', 'password', self.account_password_field.text())
-        config.set('USER_SETTINGS', 'num_of_accs', str(self.accs_field.text()))
-        config.set('USER_SETTINGS', 'retry_seconds', str(self.retry_timer_field.text()))
-        config.set('USER_SETTINGS', 'use_proxies', str(self.use_proxies_box.currentIndex()))
+        config['USER_SETTINGS']['username_prefix'] = self.username_prefix_field.text()
+        config['USER_SETTINGS']['username_prefix'] = self.username_prefix_field.text()
+        config['USER_SETTINGS']['password'] = self.account_password_field.text()
+        config['USER_SETTINGS']['num_of_accs'] = str(self.accs_field.text())
+        config['USER_SETTINGS']['retry_seconds'] = str(self.retry_timer_field.text())
+        config['USER_SETTINGS']['use_proxies'] = str(self.use_proxies_box.currentIndex())
         if self.proxy_auth_box.currentIndex() == 0:
-            config.set('USER_SETTINGS', 'proxy_auth_type', '2')
+            config['USER_SETTINGS']['proxy_auth_type'] = '2'
         else:
-            config.set('USER_SETTINGS', 'proxy_auth_type', '1')
+            config['USER_SETTINGS']['proxy_auth_type'] = '1'
 
         if self.use_client_box.currentIndex() == 0:
-            config.set('TRIBOT_CLI_SETTINGS', 'use_tribot', ('0'))
-            config.set('OSBOT_CLI_SETTINGS', 'use_osbot', ('0'))
+            config['TRIBOT_CLI_SETTINGS']['use_tribot'] = '0'
+            config['OSBOT_CLI_SETTINGS']['use_osbot'] = '0'
         elif self.use_client_box.currentIndex() == 1:
-            config.set('TRIBOT_CLI_SETTINGS', 'use_tribot', ('0'))
-            config.set('OSBOT_CLI_SETTINGS', 'use_osbot', ('1'))
-            config.set('OSBOT_CLI_SETTINGS', 'osbot_username', self.client_username_field.text())
-            config.set('OSBOT_CLI_SETTINGS', 'osbot_password', self.client_password_field.text())
-            config.set('OSBOT_CLI_SETTINGS', 'osbot_script', self.script_name_field.text())
-            config.set('OSBOT_CLI_SETTINGS', 'script_args', self.script_args_field.text())
+            config['TRIBOT_CLI_SETTINGS']['use_tribot'] = '0'
+            config['OSBOT_CLI_SETTINGS']['use_osbot'] = '1'
+            config['OSBOT_CLI_SETTINGS']['osbot_username'] = self.client_username_field.text()
+            config['OSBOT_CLI_SETTINGS']['osbot_password'] = self.client_password_field.text()
+            config['OSBOT_CLI_SETTINGS']['osbot_script'] = self.script_name_field.text()
+            config['OSBOT_CLI_SETTINGS']['script_args'] = self.script_args_field.text()
         else:
-            config.set('OSBOT_CLI_SETTINGS', 'use_osbot', ('0'))
-            config.set('TRIBOT_CLI_SETTINGS', 'use_tribot', ('1'))
-            config.set('TRIBOT_CLI_SETTINGS', 'tribot_username', self.client_username_field.text())
-            config.set('TRIBOT_CLI_SETTINGS', 'tribot_password', self.client_password_field.text())
-            config.set('TRIBOT_CLI_SETTINGS', 'tribot_script', self.script_name_field.text())
-            config.set('TRIBOT_CLI_SETTINGS', 'script_args', self.script_args_field.text())
+            config['OSBOT_CLI_SETTINGS']['use_osbot'] = '0'
+            config['TRIBOT_CLI_SETTINGS']['use_tribot'] = '1'
+            config['TRIBOT_CLI_SETTINGS']['tribot_username'] = self.client_username_field.text()
+            config['TRIBOT_CLI_SETTINGS']['tribot_password'] = self.client_password_field.text()
+            config['TRIBOT_CLI_SETTINGS']['tribot_script'] = self.script_name_field.text()
+            config['TRIBOT_CLI_SETTINGS']['script_args'] = self.script_args_field.text()
+
+        with open("../src/settings/settings.ini", 'w') as settings_file:
+            config.write(settings_file)
 
         self.console_browser.append("\nSettings have been saved.\n")
 
@@ -322,14 +325,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 def main():
     if check_key():  # If valid license, check for an update
-        if check_update():  # We're on the latest version
-            app = QtWidgets.QApplication(sys.argv)
-            window = MainWindow()
-            window.show()
-            app.exec()
-        else:  # Installed new version of the program
-            time.sleep(5)
-            sys.exit()
+        # if check_update():  # We're on the latest version
+        app = QtWidgets.QApplication(sys.argv)
+        window = MainWindow()
+        window.show()
+        app.exec()
+        # else:  # Installed new version of the program
+        #     time.sleep(5)
+        #     sys.exit()
     else:  # Invalid license or machine
         with open('log.txt', 'a+') as log_file:
             log_file.write(f"Today's Date is: {str(datetime.now().replace(microsecond=0))}\n")

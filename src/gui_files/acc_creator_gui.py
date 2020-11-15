@@ -23,6 +23,9 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(400, 350))
         MainWindow.setMaximumSize(QtCore.QSize(800, 600))
         MainWindow.setBaseSize(QtCore.QSize(0, 0))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("roboticon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
@@ -161,7 +164,7 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(1)
         self.create_accounts_button.clicked.connect(MainWindow.create_accounts)
         self.clear_console_button.clicked.connect(MainWindow.clear_console)
         self.save_console_button.clicked.connect(MainWindow.save_console)
