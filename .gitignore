@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # User defined files
-settings/
+src/settings/
 created_accs.txt
 TRiBot/
 osbot 2.6.4.jar
@@ -139,3 +139,5 @@ osbot 2.6.4.jar
 
 # Pycharm
 .idea
+src/settings/proxy_list.txt
+src/settings/settings.ini

@@ -138,7 +138,7 @@ def save_account(payload, proxy=None):
     return formatted_payload
 
 
-def create_account(append_text, progress_callback):
+def create_account(progress_callback):
     """Creates our account and returns the registration info"""
     NUM_OF_ACCS = get_user_settings()[4]
     TRIBOT_ACTIVE = get_tribot_settings()[0]

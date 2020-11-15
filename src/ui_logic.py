@@ -1,6 +1,9 @@
 import sys
 import traceback
 import time
+import os
+
+from PyQt5.QtWidgets import QTableWidgetItem
 
 from src import acc_creator
 
@@ -10,7 +13,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, QTimer, QThreadPool, QRunnable
 
 from src.gui_files.acc_creator_gui import Ui_MainWindow
-from src.modules.helper_modules.utility import (get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
+from src.modules.helper_modules.utility import (get_index, get_user_settings, get_site_settings, get_tribot_settings, get_osbot_settings)
 from src.modules.licensing.creator_licensing import check_key
 from src.modules.updater.updater import check_update
 
@@ -55,7 +58,6 @@ class Worker(QRunnable):
     :param args: Arguments to pass to the callback function
     :param kwargs: Keywords to pass to the callback function
     """
-    test = pyqtSignal(str)
 
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
@@ -90,6 +92,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.threadpool = QThreadPool.globalInstance()
         self.update_text.connect(self.append_text)
         self.use_client_box.currentIndexChanged.connect(self.on_client_change, self.use_client_box.currentIndex())
+        self.did_they_save = False
 
     def append_text(self, msg):
         self.console_browser.append(msg)
@@ -106,6 +109,97 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.client_password_field.setText(tribot_password)
             self.script_name_field.setText(tribot_script)
             self.script_args_field.setText(tribot_script_args)
+
+    def save_proxies(self):
+        self.did_they_save = True
+
+        def save_proxy(current_proxy):
+            """Save the proxy dictionary contents in a correctly formatted line to our proxy_list.txt file."""
+            with open("../src/settings/proxy_list.txt", "a+") as proxy_file:
+                if os.stat("../src/settings/proxy_list.txt").st_size == 0:
+                    current_proxy = format_proxy(current_proxy)
+                    print(current_proxy)
+                    print(type(current_proxy))
+                    if current_proxy:
+                        proxy_file.write(current_proxy)
+                        print(f"Wrote to file: {current_proxy}")
+                else:
+                    current_proxy = format_proxy(current_proxy)
+                    if current_proxy:
+                        proxy_file.write("\n")
+                        proxy_file.write(current_proxy)
+
+            print("Proxies have been saved.")
+
+        def format_proxy(proxy_dict):
+            """Formats our proxy dictionary to an acceptable string that can be written to file."""
+            formatted_proxy = "socks5://"  # This is always needed for the way we parse proxies everywhere else.
+
+            if not proxy['proxy_username']:
+                credentials = False
+            else:
+                credentials = True
+
+            if credentials:
+                formatted_proxy += proxy_dict['proxy_username']
+                formatted_proxy += ':'
+                formatted_proxy += proxy_dict['proxy_password']
+                formatted_proxy += '@'
+                formatted_proxy += proxy_dict['proxy_ip']
+                formatted_proxy += ':'
+                formatted_proxy += proxy_dict['proxy_port']
+                return formatted_proxy
+            else:
+                try:
+                    formatted_proxy += proxy_dict['proxy_ip']
+                    formatted_proxy += ':'
+                    formatted_proxy += proxy_dict['proxy_port']
+                    return formatted_proxy
+                except TypeError as _:
+                    print("Invalid proxy format.")
+
+            print(formatted_proxy)
+
+        open("../src/settings/proxy_list.txt", 'w').close()
+        print("cleared proxy file")
+
+        row_count = self.proxy_table.rowCount()
+        print(f"We will save {row_count} rows.")
+
+        try:
+            for row in range(row_count):
+                # Recreate the dictionary for each row.
+                # No reason to save all of the proxies in memory since the proxy_list.txt is the source of truth
+                proxy = {"proxy_ip": None, "proxy_port": None, "proxy_username": None, "proxy_password": None}
+                print(f"Saving row: {row}")
+                counter = 0
+
+                # Loop over the columns in the current row and store the data in the "proxy" dictionary to save later
+                for field in proxy:
+                    try:
+                        column_value = self.proxy_table.item(row, counter).text()
+                        if not column_value:
+                            proxy[field] = None
+                        else:
+                            proxy[field] = column_value
+                    except AttributeError:
+                        proxy[field] = None
+                    counter += 1
+                print(proxy)
+                save_proxy(proxy)
+        except Exception:
+            traceback.print_exc()
+
+    def add_proxy(self):
+        self.proxy_table.insertRow(self.proxy_table.rowCount())
+
+    def remove_proxy(self):
+        self.proxy_table.removeRow(self.proxy_table.currentIndex().row())
+
+    def closeEvent(self, event):
+        if not self.did_they_save:
+            self.save_proxies()
+        event.accept()
 
     def load_settings(self):
         """Loads our settings from the settings.ini file"""
@@ -140,6 +234,42 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.script_args_field.setText(tribot_script_args)
         else:
             self.use_client_box.setCurrentIndex(0)
+
+        def load_proxies():
+            proxy = {"proxy_ip": None, "proxy_port": None, "proxy_username": None, "proxy_password": None}
+
+            with open("../src/settings/proxy_list.txt")as proxy_file:
+                try:
+                    counter = 0
+                    for line in proxy_file:
+                        try:
+                            proxy['proxy_ip'] = line[get_index(line, '@', 1) + 1:get_index(line, ':', 3)]
+                            proxy['proxy_port'] = line[get_index(line, ':', 3) + 1:].strip('\n')
+                            proxy['proxy_username'] = line[get_index(line, '/', 2) + 1:get_index(line, ':', 2)]
+                            proxy['proxy_password'] = line[get_index(line, ':', 2) + 1:get_index(line, '@', 1)]
+                        except ValueError:
+                            try:
+                                proxy['proxy_ip'] = line[get_index(line, '/', 2) + 1:get_index(line, ':', 2)]
+                                proxy['proxy_port'] = line[get_index(line, ':', 2) + 1:].strip('\n')
+                                proxy['proxy_username'] = None
+                                proxy['proxy_password'] = None
+                            except ValueError:
+                                pass
+
+                        # Load current proxy dict into proxy_table here
+                        self.proxy_table.insertRow(self.proxy_table.rowCount())
+                        self.proxy_table.setItem(counter, 0, QTableWidgetItem(proxy['proxy_ip']))
+                        self.proxy_table.setItem(counter, 1, QTableWidgetItem(proxy['proxy_port']))
+                        self.proxy_table.setItem(counter, 2, QTableWidgetItem(proxy['proxy_username']))
+                        self.proxy_table.setItem(counter, 3, QTableWidgetItem(proxy['proxy_password']))
+
+                        counter += 1
+                except Exception:
+                    traceback.print_exc()
+
+        load_proxies()
+        open("../src/settings/proxy_list.txt", 'w').close()
+        print("cleared proxy file")
 
     def save_settings(self):
         # Run this inside of create_accounts()
@@ -177,9 +307,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             config.set('TRIBOT_CLI_SETTINGS', 'tribot_password', self.client_password_field.text())
             config.set('TRIBOT_CLI_SETTINGS', 'tribot_script', self.script_name_field.text())
             config.set('TRIBOT_CLI_SETTINGS', 'script_args', self.script_args_field.text())
-
-        with open('../src/settings/settings.ini', 'w+') as config_file:
-            config.write(config_file)
 
         self.console_browser.append("\nSettings have been saved.\n")
 
