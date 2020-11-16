@@ -153,8 +153,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 except TypeError as _:
                     print("Invalid proxy format.")
 
-            print(formatted_proxy)
-
+        # Clearing the proxy file since we'll rewrite to it.
         open("../src/settings/proxy_list.txt", 'w').close()
 
         row_count = self.proxy_table.rowCount()
@@ -177,7 +176,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     except AttributeError:
                         proxy[field] = None
                     counter += 1
-                print(f"Saving proxy: {proxy}")
                 save_proxy(proxy)
         except Exception:
             traceback.print_exc()
@@ -317,6 +315,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.console_browser.clear()
 
     def create_accounts(self, progress_callback):
+        self.save_proxies()
         self.save_settings()
         worker = Worker(acc_creator.create_account, progress_callback)
         worker.signals.progress.connect(self.append_text)

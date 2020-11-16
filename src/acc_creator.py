@@ -5,7 +5,8 @@ import random
 import string
 import sys
 import time
-from src.modules.helper_modules.utility import (timestamp, read_proxy, get_user_settings, get_tribot_settings, get_osbot_settings)
+from src.modules.helper_modules.utility import (timestamp, read_proxy, get_user_settings, get_tribot_settings,
+                                                get_osbot_settings, get_index)
 from src.modules.bot_client_cli.tribot_cli import use_tribot
 from src.modules.bot_client_cli.osbot_cli import use_osbot
 import requests
@@ -79,9 +80,13 @@ def get_payload() -> dict:
         email = ''.join([random.choice(string.ascii_lowercase + string.digits)
                          for n in range(6)]) + '@gmail.com'
     else:  # We're using a custom prefix for our usernames
-        email = email + str(random.randint(1000, 9999)) + '@gmail.com'
+        if '@' in email:  # Using a custom domain
+            email = ''.join([random.choice(string.ascii_lowercase + string.digits)
+                             for n in range(6)]) + email
+        else:
+            email = email + str(random.randint(1000, 9999)) + '@gmail.com'
     if not password:
-        password = email[:-10] + str(random.randint(1, 9999))
+        password = email[:get_index(email, '@', 1)] + str(random.randint(1, 9999))
 
     # Generate random birthday for the account
     day = str(random.randint(1, 25))
@@ -162,17 +167,20 @@ def create_account(append_text, progress_callback):
         progress_callback.emit(f"\nSleeping for {sleep_timer} seconds...")
         time.sleep(sleep_timer)
 
-        progress_callback.emit(f"{timestamp()}Starting create_account()")
+        progress_callback.emit(f"{timestamp()} Creating account...")
 
         if USE_PROXIES:
             proxy = get_proxy()
         else:
             proxy = None
 
-        progress_callback.emit(f"Proxy: {proxy}")
+        progress_callback.emit(f"Proxy: {proxy['https']}")
 
         payload = get_payload()
-        submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy)
+        try:
+            submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy, timeout=20)
+        except Exception as e:
+            print(e)
         if submit.ok:
             if check_account(submit):
                 progress_callback.emit("Account created successfully.")
@@ -187,7 +195,6 @@ def create_account(append_text, progress_callback):
                     cmd = use_osbot(payload['email1'], payload['password1'], proxy)
                     progress_callback.emit("\nLoading OSBot with the following settings...")
                     progress_callback.emit(cmd)
-
             else:
                 progress_callback.emit("Account creation failed.")
                 failure_counter += 1
