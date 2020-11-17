@@ -125,16 +125,13 @@ def save_account(payload, proxy=None):
         proxy_auth_type = get_user_settings()[1]
         proxy_ip = read_proxy(proxy, proxy_auth_type)[2]
         proxy = proxy_ip
-
     else:
         proxy = get_ip()
 
-    # Check if we want user friendly formatting or bot manager friendly
+    # Check if we want user:pass format(false) or user:pass:ip(true)
     acc_details_format = get_user_settings()[7]
     if acc_details_format:
-        formatted_payload = (f"\nemail:{payload['email1']}, password:{payload['password1']},"
-                             f" Birthday:{payload['month']}/{payload['day']}/{payload['year']},"
-                             f" Proxy:{proxy}")
+        formatted_payload = f"\n{payload['email1']}:{payload['password1']}:{proxy}"
     else:
         formatted_payload = f"\n{payload['email1']}:{payload['password1']}"
 
@@ -171,10 +168,10 @@ def create_account(append_text, progress_callback):
 
         if USE_PROXIES:
             proxy = get_proxy()
+            progress_callback.emit(f"Proxy: {proxy['https']}")
         else:
             proxy = None
-
-        progress_callback.emit(f"Proxy: {proxy['https']}")
+            progress_callback.emit(f"Proxy: {proxy}")
 
         payload = get_payload()
         try:
@@ -200,9 +197,9 @@ def create_account(append_text, progress_callback):
                 failure_counter += 1
                 if failure_counter == failure_threshold:
                     progress_callback.emit(f"Failed {failure_counter} times. Let your IP cool down or up the sleep timer.")
-                    accs_created = NUM_OF_ACCS  # End the creation loop
-                    progress_callback.emit("Finished creating accounts.")
+                    break
         else:
             progress_callback.emit(f"Creation failed. Error code {submit.status_code}")
             progress_callback.emit(submit.text)
     progress_callback.emit(f"\n{timestamp()}Finished creating accounts.")
+    progress_callback.emit(f"We created: {accs_created} accounts.")
