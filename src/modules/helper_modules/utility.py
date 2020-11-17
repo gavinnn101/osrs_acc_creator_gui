@@ -18,7 +18,6 @@ def get_index(input_string, sub_string, ordinal):
 
 def read_proxy(proxy, proxy_auth_type):
 	proxy = str(proxy)
-	print(proxy)
 	if proxy_auth_type == 1:  # Formatting based on user:pass authentication
 		proxy_username = proxy[get_index(proxy, '/', 2)+1:get_index(proxy, ':', 3)]
 		proxy_password = proxy[get_index(proxy, ':', 3)+1:get_index(proxy, '@', 1)]

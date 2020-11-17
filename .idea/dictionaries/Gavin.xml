@@ -2,11 +2,17 @@
   <dictionary name="Gavin">
     <words>
       <w>accs</w>
+      <w>avif</w>
       <w>charname</w>
       <w>charpass</w>
       <w>charpassword</w>
       <w>charusername</w>
       <w>charworld</w>
+      <w>dest</w>
+      <w>fmobile</w>
+      <w>fplay</w>
+      <w>khtml</w>
+      <w>oldschool</w>
       <w>osbot</w>
       <w>proxyhost</w>
       <w>proxypassword</w>

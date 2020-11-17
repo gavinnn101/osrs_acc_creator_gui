@@ -5,7 +5,8 @@ import random
 import string
 import sys
 import time
-from src.modules.helper_modules.utility import (timestamp, read_proxy, get_user_settings, get_tribot_settings, get_osbot_settings)
+from src.modules.helper_modules.utility import (timestamp, read_proxy, get_user_settings, get_tribot_settings,
+                                                get_osbot_settings, get_index)
 from src.modules.bot_client_cli.tribot_cli import use_tribot
 from src.modules.bot_client_cli.osbot_cli import use_osbot
 import requests
@@ -79,9 +80,13 @@ def get_payload() -> dict:
         email = ''.join([random.choice(string.ascii_lowercase + string.digits)
                          for n in range(6)]) + '@gmail.com'
     else:  # We're using a custom prefix for our usernames
-        email = email + str(random.randint(1000, 9999)) + '@gmail.com'
+        if '@' in email:  # Using a custom domain
+            email = ''.join([random.choice(string.ascii_lowercase + string.digits)
+                             for n in range(6)]) + email
+        else:
+            email = email + str(random.randint(1000, 9999)) + '@gmail.com'
     if not password:
-        password = email[:-10] + str(random.randint(1, 9999))
+        password = email[:get_index(email, '@', 1)] + str(random.randint(1, 9999))
 
     # Generate random birthday for the account
     day = str(random.randint(1, 25))
@@ -120,16 +125,13 @@ def save_account(payload, proxy=None):
         proxy_auth_type = get_user_settings()[1]
         proxy_ip = read_proxy(proxy, proxy_auth_type)[2]
         proxy = proxy_ip
-
     else:
         proxy = get_ip()
 
-    # Check if we want user friendly formatting or bot manager friendly
+    # Check if we want user:pass format(false) or user:pass:ip(true)
     acc_details_format = get_user_settings()[7]
     if acc_details_format:
-        formatted_payload = (f"\nemail:{payload['email1']}, password:{payload['password1']},"
-                             f" Birthday:{payload['month']}/{payload['day']}/{payload['year']},"
-                             f" Proxy:{proxy}")
+        formatted_payload = f"\n{payload['email1']}:{payload['password1']}:{proxy}"
     else:
         formatted_payload = f"\n{payload['email1']}:{payload['password1']}"
 
@@ -162,17 +164,20 @@ def create_account(append_text, progress_callback):
         progress_callback.emit(f"\nSleeping for {sleep_timer} seconds...")
         time.sleep(sleep_timer)
 
-        progress_callback.emit(f"{timestamp()}Starting create_account()")
+        progress_callback.emit(f"{timestamp()} Creating account...")
 
         if USE_PROXIES:
             proxy = get_proxy()
+            progress_callback.emit(f"Proxy: {proxy['https']}")
         else:
             proxy = None
-
-        progress_callback.emit(f"Proxy: {proxy}")
+            progress_callback.emit(f"Proxy: {proxy}")
 
         payload = get_payload()
-        submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy)
+        try:
+            submit = requests.post(SITE_URL, headers=HEADERS, data=payload, proxies=proxy, timeout=20)
+        except Exception as e:
+            print(e)
         if submit.ok:
             if check_account(submit):
                 progress_callback.emit("Account created successfully.")
@@ -187,15 +192,14 @@ def create_account(append_text, progress_callback):
                     cmd = use_osbot(payload['email1'], payload['password1'], proxy)
                     progress_callback.emit("\nLoading OSBot with the following settings...")
                     progress_callback.emit(cmd)
-
             else:
                 progress_callback.emit("Account creation failed.")
                 failure_counter += 1
                 if failure_counter == failure_threshold:
                     progress_callback.emit(f"Failed {failure_counter} times. Let your IP cool down or up the sleep timer.")
-                    accs_created = NUM_OF_ACCS  # End the creation loop
-                    progress_callback.emit("Finished creating accounts.")
+                    break
         else:
             progress_callback.emit(f"Creation failed. Error code {submit.status_code}")
             progress_callback.emit(submit.text)
     progress_callback.emit(f"\n{timestamp()}Finished creating accounts.")
+    progress_callback.emit(f"We created: {accs_created} accounts.")
